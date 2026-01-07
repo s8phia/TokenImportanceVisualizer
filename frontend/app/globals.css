@@ -115,7 +115,6 @@ button, label, select, input, textarea,
               width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Hide MUI PieChart legend */
 .MuiChartsLegend-root {
   display: none !important;
 }

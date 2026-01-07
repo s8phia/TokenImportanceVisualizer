@@ -2,6 +2,7 @@
 import { useState, useEffect, useMemo, memo, useRef } from "react";
 import { createPortal } from "react-dom";
 import { PieChart } from "@mui/x-charts/PieChart";
+import { GradientCard } from "@/components/GradientCard";
 
 export default function Home() {
   const [text, setText] = useState("");
@@ -108,12 +109,9 @@ export default function Home() {
       "#ec4899", // pink
     ];
     
-    // Memoize filtered predictions and chart data
     const { filteredPredictions, chartData } = useMemo(() => {
-      // Filter out predictions with 0% probability
       const filtered = predictions.filter(pred => pred.probability > 0);
       
-      // Prepare data for MUI PieChart
       const data = filtered.map((pred, index) => ({
         id: `${pred.label}-${index}`,
         value: pred.probability * 100,
@@ -172,17 +170,15 @@ export default function Home() {
       </div>
     );
   }, (prevProps, nextProps) => {
-    // Return true if props are equal (skip re-render), false if different (re-render)
     if (prevProps.predictions.length !== nextProps.predictions.length) {
-      return false; // Different length, need to re-render
+      return false; 
     }
-    // Check if all predictions are the same
     const areEqual = prevProps.predictions.every((pred, index) => {
       const nextPred = nextProps.predictions[index];
       return pred.label === nextPred.label && 
              Math.abs(pred.probability - nextPred.probability) < 0.0001;
     });
-    return areEqual; // Return true if equal (skip re-render), false if different (re-render)
+    return areEqual; 
   });
   
   DonutChart.displayName = 'DonutChart';
@@ -250,7 +246,6 @@ export default function Home() {
       const cleanedToken = cleanToken(tokenData.token);
       const tokenWithCleaned = { ...tokenData, text: cleanedToken };
       
-      // Check if token is already dropped
       const isDuplicate = droppedTokens.some(
         (t) => t.token === tokenData.token && t.score === tokenData.score
       );
@@ -264,7 +259,6 @@ export default function Home() {
       setDroppedTokens(newDroppedTokens);
       setError(null);
 
-      // If we now have 2 tokens, automatically call the explain API
       if (newDroppedTokens.length === 2) {
         await explainTokens(newDroppedTokens[0], newDroppedTokens[1]);
       }
@@ -356,7 +350,7 @@ export default function Home() {
         {/* Header */}
         <div className="text-left mb-12">
           <h1 className="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            AI Token Importance Visualizer
+            Token Importance Visualizer
           </h1>
           <div className="flex items-center gap-2">
             <svg
@@ -383,7 +377,7 @@ export default function Home() {
           <div className="flex justify-center animate-in fade-in">
             <div className="w-full max-w-2xl transition-all duration-500 ease-out">
               {/* Main Content Card */}
-              <div className="bg-white dark:bg-[hsl(230,22%,10%)] rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 transition-all duration-500 ease-out">
+              <GradientCard className="bg-white dark:bg-[hsl(230,22%,10%)] shadow-xl">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Text Analysis Input</h2>
               {/* Task Selection */}
               <div className="mb-6">
@@ -446,16 +440,16 @@ export default function Home() {
                   </>
                 ) : (
                   <span>Analyze Text</span>
-                )}
-              </button>
-              </div>
+                  )}
+                </button>
+              </GradientCard>
             </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-in fade-in layout-transition">
             <div className="space-y-8 animate-in fade-in scale-in" style={{ animationDelay: '0.1s', animationFillMode: 'both' }}>
               {/* Main Content Card */}
-              <div className="bg-white dark:bg-[hsl(230,22%,10%)] rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 transition-all duration-500 ease-out">
+              <GradientCard className="bg-white dark:bg-[hsl(230,22%,10%)] shadow-xl">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Text Analysis Input</h2>
                 {/* Task Selection */}
                 <div className="mb-6">
@@ -520,23 +514,31 @@ export default function Home() {
                     <span>Analyze Text</span>
                   )}
                 </button>
-              </div>
+              </GradientCard>
 
               {/* Prediction Card */}
-              <div className="bg-white dark:bg-[hsl(230,22%,10%)] rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 animate-in fade-in slide-in-from-bottom-4" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
+              <GradientCard className="bg-white dark:bg-[hsl(230,22%,10%)] shadow-xl animate-in fade-in slide-in-from-bottom-4" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Prediction Result</h2>
-                <div className="p-6 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
-                  <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-6">
-                    Prediction Probabilities
-                  </h3>
-                  {memoizedPredictions && <DonutChart predictions={memoizedPredictions} />}
-                </div>
-              </div>
+                {memoizedPredictions && memoizedPredictions.length > 0 && (
+                  <div className="mb-6 px-4 py-2 rounded-full border-[0.5px] border-white/30 dark:border-white/20 text-center inline-block shadow-[0_0_15px_rgba(59,130,246,0.5),0_0_30px_rgba(147,51,234,0.3)] dark:shadow-[0_0_15px_rgba(59,130,246,0.6),0_0_30px_rgba(147,51,234,0.4)]">
+                    <p className="text-sm text-gray-700 dark:text-gray-300 mb-1 uppercase tracking-wide font-semibold">
+                      Main Prediction:
+                    </p>
+                    <p className="text-xl font-bold text-gray-900 dark:text-white capitalize">
+                      {memoizedPredictions[0].label} ({(memoizedPredictions[0].probability * 100).toFixed(1)}%)
+                    </p>
+                  </div>
+                )}
+                <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-6">
+                  Prediction Probabilities
+                </h3>
+                {memoizedPredictions && <DonutChart predictions={memoizedPredictions} />}
+              </GradientCard>
 
             </div>
 
             {/* Right Column - Token Visualization */}
-            <div className="bg-white dark:bg-[hsl(230,22%,10%)] rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 animate-in fade-in slide-in-from-right" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>
+            <GradientCard className="bg-white dark:bg-[hsl(230,22%,10%)] shadow-xl animate-in fade-in slide-in-from-right" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Token Importance Visualization</h2>
               {/* Legend */}
               <div className="mb-8 p-6 bg-gray-50 dark:bg-[hsl(230,22%,12%)] rounded-xl">
@@ -590,14 +592,14 @@ export default function Home() {
 
               {/* Drag and Drop Comparison Box */}
               <div className="mt-8 bg-white dark:bg-[hsl(230,22%,10%)] rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700">
-                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
                   Compare Tokens
                 </h4>
                 <div
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
                   onDrop={handleDrop}
-                  className={`p-8 rounded-xl border-2 border-dashed transition-all ${
+                  className={`p-6 rounded-xl border-2 border-dashed transition-all mt-2 ${
                     dragOver
                       ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
                       : "border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[hsl(230,22%,12%)]"
@@ -711,14 +713,14 @@ export default function Home() {
                   </div>
                 )}
               </div>
-            </div>
+            </GradientCard>
           </div>
         )}
       </div>
 
       {/* Footer */}
       <footer className="text-center py-8 text-gray-600 dark:text-[hsl(220,15%,92%)] text-sm">
-        <p>Made by Sophia 2026 • Powered by Transformers</p>
+        <p>Made by Sophia 2026 • Powered by Hugging Face Transformers</p>
       </footer> 
     </div>
   );
