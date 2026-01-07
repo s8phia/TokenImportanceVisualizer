@@ -93,7 +93,7 @@ export default function Home() {
   const LegendItem = ({ colour, label }: { colour: string; label: string }) => (
     <div className="flex items-center gap-2">
       <div className={`w-4 h-4 rounded ${colour}`} />
-      <span className="text-sm text-gray-700 dark:text-gray-300">{label}</span>
+      <span className="text-sm text-gray-700 dark:text-[hsl(220,15%,92%)]">{label}</span>
     </div>
   );
 
@@ -159,10 +159,10 @@ export default function Home() {
                   className="w-4 h-4 rounded" 
                   style={{ backgroundColor: color }}
                 />
-                <span className={`text-sm capitalize ${isTopPrediction ? 'font-bold text-gray-900 dark:text-white' : 'text-gray-700 dark:text-gray-300'}`}>
+                <span className={`text-sm capitalize ${isTopPrediction ? 'font-bold text-gray-900 dark:text-white' : 'text-gray-700 dark:text-[hsl(220,15%,92%)]'}`}>
                   {pred.label}
                 </span>
-                <span className={`text-sm font-mono ml-auto ${isTopPrediction ? 'font-bold text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400'}`}>
+                <span className={`text-sm font-mono ml-auto ${isTopPrediction ? 'font-bold text-gray-900 dark:text-white' : 'text-gray-600 dark:text-[hsl(220,15%,92%)]'}`}>
                   {percentage}%
                 </span>
               </div>
@@ -351,23 +351,43 @@ export default function Home() {
   }, [result?.all_predictions]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-[hsl(230,25%,6%)] dark:to-[hsl(230,25%,8%)]">
       <div className="container mx-auto px-4 py-12 max-w-7xl">
         {/* Header */}
         <div className="text-left mb-12">
           <h1 className="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             AI Token Importance Visualizer
           </h1>
+          <div className="flex items-center gap-2">
+            <svg
+              className="w-5 h-5 text-gray-500 dark:text-[hsl(220,15%,92%)]"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <p className="text-sm text-gray-600 dark:text-[hsl(220,15%,92%)]">
+              Educational tool
+            </p>
+          </div>
         </div>
 
         {!result ? (
           <div className="flex justify-center animate-in fade-in">
             <div className="w-full max-w-2xl transition-all duration-500 ease-out">
               {/* Main Content Card */}
-              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 transition-all duration-500 ease-out">
+              <div className="bg-white dark:bg-[hsl(230,22%,10%)] rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 transition-all duration-500 ease-out">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Text Analysis Input</h2>
               {/* Task Selection */}
               <div className="mb-6">
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-[hsl(220,15%,92%)] mb-3">
                   Analysis Type
                 </label>
                 <select
@@ -383,7 +403,7 @@ export default function Home() {
 
               {/* Text Input */}
               <div className="mb-6">
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-[hsl(220,15%,92%)] mb-3">
                   Text to Analyze
                 </label>
                 <textarea
@@ -398,7 +418,7 @@ export default function Home() {
                   className="w-full px-4 py-3 bg-white dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
                   disabled={loading}
                 />
-                <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                <p className="mt-2 text-xs text-gray-500 dark:text-[hsl(220,15%,92%)]">
                   Press Cmd/Ctrl + Enter to analyze
                 </p>
               </div>
@@ -414,7 +434,7 @@ export default function Home() {
               <button
                 onClick={analyze}
                 disabled={loading || !text.trim()}
-                className="w-full py-4 px-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-lg flex items-center justify-center gap-2"
+                className="w-full py-4 px-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-lg flex items-center justify-center gap-2"
               >
                 {loading ? (
                   <>
@@ -435,10 +455,11 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-in fade-in layout-transition">
             <div className="space-y-8 animate-in fade-in scale-in" style={{ animationDelay: '0.1s', animationFillMode: 'both' }}>
               {/* Main Content Card */}
-              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 transition-all duration-500 ease-out">
+              <div className="bg-white dark:bg-[hsl(230,22%,10%)] rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 transition-all duration-500 ease-out">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Text Analysis Input</h2>
                 {/* Task Selection */}
                 <div className="mb-6">
-                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-[hsl(220,15%,92%)] mb-3">
                     Analysis Type
                   </label>
                   <select
@@ -454,7 +475,7 @@ export default function Home() {
 
                 {/* Text Input */}
                 <div className="mb-6">
-                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-[hsl(220,15%,92%)] mb-3">
                     Text to Analyze
                   </label>
                   <textarea
@@ -469,7 +490,7 @@ export default function Home() {
                     className="w-full px-4 py-3 bg-white dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
                     disabled={loading}
                   />
-                  <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                  <p className="mt-2 text-xs text-gray-500 dark:text-[hsl(220,15%,92%)]">
                     Press Cmd/Ctrl + Enter to analyze
                   </p>
                 </div>
@@ -485,7 +506,7 @@ export default function Home() {
                 <button
                   onClick={analyze}
                   disabled={loading || !text.trim()}
-                  className="w-full py-4 px-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-lg flex items-center justify-center gap-2"
+                  className="w-full py-4 px-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-lg flex items-center justify-center gap-2"
                 >
                   {loading ? (
                     <>
@@ -502,7 +523,8 @@ export default function Home() {
               </div>
 
               {/* Prediction Card */}
-              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 animate-in fade-in slide-in-from-bottom-4" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
+              <div className="bg-white dark:bg-[hsl(230,22%,10%)] rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 animate-in fade-in slide-in-from-bottom-4" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Prediction Result</h2>
                 <div className="p-6 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
                   <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-6">
                     Prediction Probabilities
@@ -514,9 +536,10 @@ export default function Home() {
             </div>
 
             {/* Right Column - Token Visualization */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 animate-in fade-in slide-in-from-right" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>
+            <div className="bg-white dark:bg-[hsl(230,22%,10%)] rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 animate-in fade-in slide-in-from-right" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Token Importance Visualization</h2>
               {/* Legend */}
-              <div className="mb-8 p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+              <div className="mb-8 p-6 bg-gray-50 dark:bg-[hsl(230,22%,12%)] rounded-xl">
                 <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-4">
                   Token Importance Legend
                 </h4>
@@ -534,7 +557,7 @@ export default function Home() {
                 <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                   Token Breakdown
                 </h4>
-                <div className="p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-200 dark:border-gray-600 max-h-[600px] overflow-y-auto relative">
+                <div className="p-6 bg-gray-50 dark:bg-[hsl(230,22%,12%)] rounded-xl border border-gray-200 dark:border-gray-600 max-h-[600px] overflow-y-auto relative">
                   <div className="leading-relaxed text-lg break-words">
                     {result.tokens.map((token: any, index: number) => {
                       const label = getLabelFromScore(token.score);
@@ -549,7 +572,7 @@ export default function Home() {
                           <span
                             draggable
                             onDragStart={(e) => handleDragStart(e, token)}
-                            className={`inline-block px-2 py-1 mb-1 mr-1 rounded-md ${getColourFromScore(
+                            className={`inline-block px-2 py-1 mb-1 mr-1 rounded-2xl ${getColourFromScore(
                               token.score
                             )} transition-all hover:scale-110 hover:shadow-md cursor-move select-none`}
                           >
@@ -560,13 +583,13 @@ export default function Home() {
                     })}
                   </div>
                 </div>
-                <p className="mt-4 text-sm text-gray-500 dark:text-gray-400 italic">
+                <p className="mt-4 text-sm text-gray-500 dark:text-[hsl(220,15%,92%)] italic">
                   Drag tokens to the comparison box below to compare their importance
                 </p>
               </div>
 
               {/* Drag and Drop Comparison Box */}
-              <div className="mt-8 bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700">
+              <div className="mt-8 bg-white dark:bg-[hsl(230,22%,10%)] rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700">
                 <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                   Compare Tokens
                 </h4>
@@ -577,7 +600,7 @@ export default function Home() {
                   className={`p-8 rounded-xl border-2 border-dashed transition-all ${
                     dragOver
                       ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                      : "border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/30"
+                      : "border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[hsl(230,22%,12%)]"
                   }`}
                 >
                   {droppedTokens.length === 0 ? (
@@ -595,7 +618,7 @@ export default function Home() {
                           d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                         />
                       </svg>
-                      <p className="text-gray-600 dark:text-gray-400 font-medium">
+                      <p className="text-gray-600 dark:text-[hsl(220,15%,92%)] font-medium">
                         Drag and drop 2 tokens here to compare
                       </p>
                       <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
@@ -608,7 +631,7 @@ export default function Home() {
                         {droppedTokens.map((token, index) => (
                           <div
                             key={index}
-                            className={`px-4 py-2 rounded-lg ${getColourFromScore(
+                            className={`px-4 py-2 rounded-2xl ${getColourFromScore(
                               token.score
                             )} flex items-center gap-2`}
                           >
@@ -641,7 +664,7 @@ export default function Home() {
                           </div>
                         ))}
                         {droppedTokens.length < 2 && (
-                          <div className="px-4 py-2 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 flex items-center">
+                          <div className="px-4 py-2 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 text-gray-500 dark:text-[hsl(220,15%,92%)] flex items-center">
                             Drop another token here
                           </div>
                         )}
@@ -649,7 +672,7 @@ export default function Home() {
                       {droppedTokens.length > 0 && (
                         <button
                           onClick={clearComparison}
-                          className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 underline"
+                          className="text-sm text-gray-600 dark:text-[hsl(220,15%,92%)] hover:text-gray-900 dark:hover:text-gray-200 underline"
                         >
                           Clear comparison
                         </button>
@@ -694,7 +717,7 @@ export default function Home() {
                     <h5 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-3">
                       AI Explanation
                     </h5>
-                    <p className="text-gray-800 dark:text-gray-200 leading-relaxed whitespace-pre-wrap">
+                    <p className="text-gray-800 dark:text-[hsl(220,15%,92%)] leading-relaxed whitespace-pre-wrap">
                       {explanation}
                     </p>
                   </div>
@@ -706,9 +729,9 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <footer className="text-center py-8 text-gray-600 dark:text-gray-400 text-sm">
-        <p>AI Token Importance Visualizer • Powered by Transformers</p>
-      </footer>
+      <footer className="text-center py-8 text-gray-600 dark:text-[hsl(220,15%,92%)] text-sm">
+        <p>Made by Sophia 2026 • Powered by Transformers</p>
+      </footer> 
     </div>
   );
 }
