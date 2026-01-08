@@ -7,7 +7,6 @@ An interactive web application that visualizes token-level importance in text cl
 - Interactive token visualization with color-coded importance scores
 - Real-time sentiment and emotion classification
 - Token comparison with AI-generated explanations
-- Dark mode support
 - Responsive design
 
 ## Tech Stack
@@ -100,12 +99,6 @@ Uses gradient-based attribution to calculate token importance:
 3. Gradients computed with respect to embedding layer
 4. Token scores derived from gradient magnitudes and signs
 5. Scores normalized and color-coded for visualization
-
-## License
-
-MIT License
-
----
 
 Made by Sophia 2026 • Powered by Hugging Face Transformers
 
