@@ -2,12 +2,17 @@ const express = require('express');
 const cors = require('cors');
 const fetch = require('node-fetch');
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3001;
 
 
-app.use(cors());
+const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+app.use(cors({
+  origin: frontendUrl
+}));
 app.use(express.json());
 require('dotenv').config();
+
+const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://127.0.0.1:8000';
 
 
 app.listen(port, () => {
@@ -22,7 +27,7 @@ app.post("/analyze", async (req, res) => {
   }
 
   try {
-    const response = await fetch("http://127.0.0.1:8000/analyze", {
+    const response = await fetch(`${ML_SERVICE_URL}/analyze`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
