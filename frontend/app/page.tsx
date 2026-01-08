@@ -111,13 +111,23 @@ export default function Home() {
   const [explanation, setExplanation] = useState<string | null>(null);
   const [explaining, setExplaining] = useState(false);
   const [dragOver, setDragOver] = useState(false);
+  const [showHowItWorks, setShowHowItWorks] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   const getColourFromScore = (score: number) => {
-    if (score <= -0.6) return "bg-red-700 text-white";
-    if (score <= -0.2) return "bg-red-300 text-red-900";
-    if (score <= 0.2) return "bg-gray-400 text-gray-900";
-    if (score <= 0.6) return "bg-green-300 text-green-900";
-    return "bg-green-700 text-white";
+    if (score <= -0.6) return "text-white";
+    if (score <= -0.2) return "text-black";
+    if (score <= 0.2) return "text-black";
+    if (score <= 0.6) return "text-black";
+    return "text-white";
+  };
+
+  const getNeonStyle = (score: number) => {
+    if (score <= -0.6) return { backgroundColor: "#d9467a", boxShadow: "0 0 3px #d9467a" };
+    if (score <= -0.2) return { backgroundColor: "#e6a0a0", boxShadow: "0 0 3px #e6a0a0" };
+    if (score <= 0.2) return { backgroundColor: "#f0d000", boxShadow: "0 0 3px #f0d000" };
+    if (score <= 0.6) return { backgroundColor: "#a0d85c", boxShadow: "0 0 3px #a0d85c" };
+    return { backgroundColor: "#3dd978", boxShadow: "0 0 3px #3dd978" };
   };
 
   const getLabelFromScore = (score: number) => {
@@ -188,9 +198,9 @@ export default function Home() {
     );
   };
 
-  const LegendItem = ({ colour, label }: { colour: string; label: string }) => (
+  const LegendItem = ({ style, label }: { style: React.CSSProperties; label: string }) => (
     <div className="flex items-center gap-2">
-      <div className={`w-4 h-4 rounded ${colour}`} />
+      <div className="w-4 h-4 rounded" style={style} />
       <span className="text-sm text-gray-700 dark:text-[hsl(220,15%,92%)]">{label}</span>
     </div>
   );
@@ -447,15 +457,19 @@ export default function Home() {
     return result.all_predictions;
   }, [result?.all_predictions]);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-[hsl(230,25%,6%)] dark:to-[hsl(230,25%,8%)]">
       <div className="container mx-auto px-4 py-12 max-w-7xl">
         {/* Header */}
-        <div className="text-left mb-12">
-          <h1 className="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+        <div className={`mb-12 text-center ${result ? 'lg:text-left' : ''}`}>
+          <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             Token Importance Visualizer
           </h1>
-          <div className="flex items-center gap-2">
+          <div className={`flex items-center gap-2 justify-center ${result ? 'lg:justify-start' : ''} mb-4`}>
             <svg
               className="w-5 h-5 text-gray-500 dark:text-[hsl(220,15%,92%)]"
               fill="none"
@@ -473,6 +487,14 @@ export default function Home() {
             <p className="text-sm text-gray-600 dark:text-[hsl(220,15%,92%)]">
               Educational tool
             </p>
+          </div>
+          <div className={`flex justify-center ${result ? 'lg:justify-start' : ''}`}>
+            <button
+              onClick={() => setShowHowItWorks(true)}
+              className="px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 border border-blue-300 dark:border-blue-600 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all"
+            >
+              How does it work?
+            </button>
           </div>
         </div>
 
@@ -536,11 +558,11 @@ export default function Home() {
                   Token Importance Legend
                 </h4>
                 <div className="flex flex-wrap gap-6">
-                  <LegendItem colour="bg-green-700" label="Strong Positive" />
-                  <LegendItem colour="bg-green-300" label="Weak Positive" />
-                  <LegendItem colour="bg-gray-400" label="Neutral" />
-                  <LegendItem colour="bg-red-300" label="Weak Negative" />
-                  <LegendItem colour="bg-red-700" label="Strong Negative" />
+                  <LegendItem style={{ backgroundColor: "#3dd978", boxShadow: "0 0 3px #3dd978" }} label="Strong Positive" />
+                  <LegendItem style={{ backgroundColor: "#a0d85c", boxShadow: "0 0 3px #a0d85c" }} label="Weak Positive" />
+                  <LegendItem style={{ backgroundColor: "#f0d000", boxShadow: "0 0 3px #f0d000" }} label="Neutral" />
+                  <LegendItem style={{ backgroundColor: "#e6a0a0", boxShadow: "0 0 3px #e6a0a0" }} label="Weak Negative" />
+                  <LegendItem style={{ backgroundColor: "#d9467a", boxShadow: "0 0 3px #d9467a" }} label="Strong Negative" />
                 </div>
               </div>
 
@@ -564,9 +586,10 @@ export default function Home() {
                           <span
                             draggable
                             onDragStart={(e) => handleDragStart(e, token)}
+                            style={getNeonStyle(token.score)}
                             className={`inline-block px-2 py-1 mb-1 mr-1 rounded-2xl ${getColourFromScore(
                               token.score
-                            )} transition-all hover:scale-110 hover:shadow-[0_0_15px_rgba(255,255,255,0.5)] active:shadow-[0_0_20px_rgba(255,255,255,0.7)] cursor-move select-none`}
+                            )} transition-all hover:scale-110 cursor-move select-none`}
                           >
                             {cleanedToken}
                           </span>
@@ -576,7 +599,7 @@ export default function Home() {
                   </div>
                 </div>
                 <p className="mt-4 text-sm text-gray-500 dark:text-[hsl(220,15%,92%)] italic">
-                  Drag tokens to the comparison box below to compare their importance
+                  Hover over tokens to see their importance. Drag tokens to the comparison box below to compare their importance
                 </p>
               </div>
 
@@ -611,9 +634,10 @@ export default function Home() {
                         {droppedTokens.map((token, index) => (
                           <div
                             key={index}
+                            style={getNeonStyle(token.score)}
                             className={`px-4 py-2 rounded-2xl ${getColourFromScore(
                               token.score
-                            )} flex items-center gap-2 hover:shadow-[0_0_15px_rgba(255,255,255,0.5)] active:shadow-[0_0_20px_rgba(255,255,255,0.7)] transition-all`}
+                            )} flex items-center gap-2 transition-all`}
                           >
                             <span className="font-medium">{token.text}</span>
                             <button
@@ -711,7 +735,51 @@ export default function Home() {
       {/* Footer */}
       <footer className="text-center py-8 text-gray-600 dark:text-[hsl(220,15%,92%)] text-sm">
         <p>Made by Sophia 2026 • Powered by Hugging Face Transformers</p>
-      </footer> 
+      </footer>
+
+      {/* How It Works Modal */}
+      {showHowItWorks && mounted && createPortal(
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+          onClick={() => setShowHowItWorks(false)}
+        >
+          <div
+            className="bg-white dark:bg-[hsl(230,22%,10%)] rounded-2xl shadow-2xl max-w-2xl w-full p-8 border border-gray-200 dark:border-gray-700"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                How does it work?
+              </h2>
+              <button
+                onClick={() => setShowHowItWorks(false)}
+                className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+                aria-label="Close"
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="text-gray-700 dark:text-[hsl(220,15%,92%)] leading-relaxed space-y-4">
+              <p>
+                This tool demonstrates token-level importance in text classification. Each word (token) is analyzed for its contribution to the final prediction. Green tokens push toward positive classifications, red toward negative. The intensity shows how strongly each token influences the result.
+              </p>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
     </div>
   );
 }
